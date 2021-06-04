@@ -1,0 +1,43 @@
+﻿@page "/fetchdata"
+@using appblazor.Shared.Models
+@inject HttpClient Http
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Name</th>
+                <th>Capital</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.alpha2Code</td>
+                    <td>@forecast.name</td>
+                    <td>@forecast.capital</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Country[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Country[]>(@"https://restcountries.eu/rest/v2/all");
+    }
+}
